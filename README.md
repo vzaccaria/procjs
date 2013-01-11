@@ -22,7 +22,7 @@ The usual suspect:
     
 ## Usage ##
 
-`jsps` can be used with all the usual `ps` options:
+`jsps` can be used with all the usual `ps` options (that depend, in turn, on your OS):
 
     jsps -fec
     [{
@@ -47,7 +47,7 @@ The usual suspect:
     }
     ...
     
-`eps` can be used to parse the output of `jsps` and may be given different *keywords*. It applies some similarity metrics as found in module `stringsim` to reorder and pretty print process information (in reverse order, so best matches are shown at the end of the list):
+`eps` can be used to parse the output of `jsps` and may be given different *keywords* to be used for sorting the output. `eps` applies some similarity metrics (from module `stringsim`) to reorder and pretty print process information (in reverse order, so best matches are shown at the end of the list):
 
     > jsps -ec | eps 'core'
      ...
@@ -65,7 +65,7 @@ The usual suspect:
 
 The similarity is computed by considering `CMD` and `USER` fields. I plan to introduce some simple customizable option to modify the fuzzy search.
 
-`proc` can be started without options. It reads the `settings.js` file to setup some variables (like `jsps` options, refresh period and port to listen to). Here are some examples:
+`proc` can be started without options. It reads `settings.js` to setup some variables (like `jsps` options, refresh period and port to listen to). Here are some examples:
 
 Getting the complete process list on the server:
 
@@ -125,3 +125,4 @@ Finally, there is an additional attribute that can be queried, called `status`. 
 
 * Extend Custom settings file.
 * Enhanced `eps` output (use graphics symbols).
+* Would it be nice to start processes with POST and kill process with DELETE
