@@ -1,0 +1,87 @@
+#!/usr/bin/env coffee
+
+punycode = require('punycode')
+_s       = require('underscore.string')
+group    = require('group-by') 
+path     = require('path')
+ss       = require('stringsim')
+optimist = require('optimist')
+moment   = require('moment')
+_        = require('underscore')
+fs       = require 'fs'
+
+
+argv     = optimist.usage('eps.\nUsage: eps --option=V | -o V arg').argv
+
+cli_arguments = argv._
+
+mm = (x,y) ->
+    e = ss.similar_text(y.toLowerCase(), x.toLowerCase())
+    return e;
+    
+meas = (x) ->
+    m_user = (b,x) ->
+        if(x.USER?) 
+            mm(b, x.USER)
+        else
+            0
+    m_cmd = (b,x) ->
+        if(x.CMD?) 
+            mm(b, x.CMD)
+        else
+            0
+    rd_command  = (acc,b) ->
+        acc = acc * (m_cmd(b,x) + m_user(b,x))
+    v = _.reduce(cli_arguments, rd_command, 1)
+    return v
+
+# The following is very preliminary
+ 
+# c2u = (x) -> punycode.ucs2.decode(x)
+
+# u2c = (x) -> punycode.ucs2.encode(x)
+
+# ch4 = [ '⣀', '⣤', '⣶', '⣿' ]
+
+# t10 = [   ' ' 
+#             '⣀'
+#             '⣀'
+#             '⣀⣤'
+#             '⣀⣤'
+#             '⣀⣤⣶'
+#             '⣀⣤⣶'
+#             '⣀⣤⣶'
+#             '⣀⣤⣶'
+#             '⣀⣤⣶⣿'
+#             '⣀⣤⣶⣿' ]
+
+# to10 = (x) -> t10[x]
+
+# toNum = (x) ->
+#     a = for c in _s.chars(_s.numberFormat(x,0,"",""))
+#             if c!= ',' then u2c([0x2080 + (c2u(c) - c2u('0'))]) else ','
+#     a.join("")
+    
+    
+fs.readFile '/dev/stdin', 'utf8', (err, data) ->
+    if (err>1)
+        console.log("error")
+    else
+        test = JSON.parse(data)
+       
+        test.sort (a,b) ->
+            if meas(a) > meas(b)
+                +1 
+            else if meas(a) < meas(b)
+                -1
+            else 
+                0
+                
+        for x in test
+            s = ""
+            for k,v of x
+                s = s + " " + _s.rpad(v,10)
+            console.log s
+
+
+

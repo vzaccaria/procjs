@@ -1,0 +1,35 @@
+{
+  "name": "procjs",
+  "description": "Extended `ps` commands (json output, fuzzy string matching) and REST server exporting current process list.",
+  "version": "0.0.0",
+  "contributors": [
+    {
+      "name": "Vittorio Zaccaria",
+      "email": "vittorio.zaccaria@gmail.com"
+    }
+  ],
+  "dependencies": {
+    "underscore-cli": ">= 0.2.16",
+    "punycode": "",
+    "underscore.string": "",
+    "group-by": "",
+    "stringsim": "",
+    "optimist": "",
+    "moment": "",
+    "underscore": "",
+    "express": "",
+    "fs": ""
+  },
+  "directories": {
+    "bin": "./bin"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/FIXME.git"
+  },
+  "bin": {
+    "jsps": "bin/jsps",
+    "eps":  "bin/eps",
+    "proc": "bin/proc"
+  }
+}

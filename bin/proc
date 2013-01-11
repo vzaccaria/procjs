@@ -1,0 +1,76 @@
+#!/usr/bin/env livescript 
+
+require! 'util'
+require! 'child_process'.exec
+require! '../lib/node_modules/procjs/bin/settings'.settings
+require! 'express'
+require! 'moment'
+
+data = { }
+
+print   = (msg) -> console.log moment().format('MMMM Do YYYY, h:mm:ss a')+ ": #{msg}"
+command = "jsps #{settings.ps_options}"
+
+refresh = ~> 
+            exec command, (err, sout, serr) ~>
+                                print "Refresh [err: #{err}]."
+                                @data = JSON.parse(sout)
+                                setTimeout refresh, settings.period 
+
+refresh()
+
+app = express()
+
+get-all = (req, res) ~>
+    res.send(@data)
+
+get-key-list = (req, res) ~>
+    key   = req.params.key
+    v = [] 
+    for x in @data
+        for prop of x
+            if prop.toLowerCase() == key.toLowerCase()
+                v.push(x[prop])
+    res.send(v)
+
+get-exact-key-value = (typ, req, res) ~~>
+    key   = req.params.key
+    value = req.params.value
+    
+    if typ == 'has-proj'
+       proj = req.params.proj
+         
+    v = [] 
+    for x in @data
+        for prop of x
+            if  prop.toLowerCase() == key.toLowerCase() and
+                x[prop].toString() == value.toString()
+                    if typ == 'has-proj'
+                        if not (proj == "status")
+                            if x[proj]?
+                                res.send(x[proj].toString())
+                            else
+                                res.send(404)
+                            return
+                        else 
+                            res.send("UP ")
+                            return
+                    else
+                        v.push(x) 
+    if v.length == 0
+        res.send(404)
+    else
+        res.send(v)
+
+app.get '/proc'                     get-all
+app.get '/proc/:key'                get-key-list
+app.get '/proc/:key/:value'         get-exact-key-value( '' )
+app.get '/proc/:key/:value/:proj'   get-exact-key-value( 'has-proj' )
+
+
+
+print "Listening on port: #{settings.port}"
+print "Try with: "
+print "http://localhost:#{settings.port}/proc"
+app.listen(settings.port)
+

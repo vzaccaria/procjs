@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# Underscore-cli should be in the path
+
+srcdir=`dirname $0`
+srcdir=`cd $srcdir; pwd`
+
+file="/var/tmp/$(basename $0).$RANDOM.json"
+
+echo "[" > $file
+ps $@ | awk -f $srcdir/../lib/node_modules/procjs/lib/jj.awk >> $file
+echo "]" >> $file
+cat $file | $srcdir/../lib/node_modules/procjs/node_modules/underscore-cli/bin/underscore print 
