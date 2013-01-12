@@ -1,7 +1,7 @@
 
 ## Introduction 
 
-**Current version is 0.0.0 but it is pretty usable**. This project uses [semantic versioning](http://semver.org/).
+**Current version is 0.0.1 but it is pretty usable**. This project uses [semantic versioning](http://semver.org/).
 
 This package provides some command-line utilities for inspecting processes' status on a server:
 
