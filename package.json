@@ -32,7 +32,7 @@
   "bin": {
     "jsps": "bin/jsps",
     "eps":  "bin/eps",
-    "proc": "bin/proc",
+    "proc": "bin/proc"
   },
   "license": "MIT"
 }
