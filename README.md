@@ -20,7 +20,7 @@ This package provides some command-line utilities for inspecting processes' stat
 
 The usual suspect:
 
-    > npm install proc
+    > npm install procjs
     
 ## Usage ##
 
