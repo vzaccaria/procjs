@@ -2,7 +2,7 @@
   "name": "procjs",
   "preferGlobal": "true",
   "description": "Extended `ps` commands (json output, fuzzy string matching) and REST server exporting current process list.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "contributors": [
     {
       "name": "Vittorio Zaccaria",

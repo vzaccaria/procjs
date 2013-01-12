@@ -18,9 +18,13 @@ This package provides some command-line utilities for inspecting processes' stat
 
 ## Installation ##
 
-The usual suspect:
+Install LiveScript globally:
 
-    > npm install procjs
+    > npm install LiveScript -g
+
+Then:
+
+    > npm install procjs -g
     
 ## Usage ##
 
