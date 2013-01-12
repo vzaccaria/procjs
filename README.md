@@ -129,6 +129,8 @@ Finally, there is an additional attribute that can be queried, called `status`. 
 
 ## Todo ##
 
+* Write tests
+* Profit
 * Extend Custom settings file.
 * Enhanced `eps` output (use graphics symbols).
 * Would it be nice to start processes with POST and kill process with DELETE

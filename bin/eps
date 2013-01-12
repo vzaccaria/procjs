@@ -16,7 +16,7 @@ argv     = optimist.usage('eps.\nUsage: eps --option=V | -o V arg').argv
 cli_arguments = argv._
 
 mm = (x,y) ->
-    e = ss.similar_text(y.toLowerCase(), x.toLowerCase())
+    e = ss.similar_text(y.toString().toLowerCase(), x.toString().toLowerCase())
     return e;
 
 props = [ "USER", "UID", "CMD"]
