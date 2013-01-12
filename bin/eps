@@ -18,50 +18,25 @@ cli_arguments = argv._
 mm = (x,y) ->
     e = ss.similar_text(y.toLowerCase(), x.toLowerCase())
     return e;
-    
+
+props = [ "USER", "UID", "CMD"]
+
 meas = (x) ->
-    m_user = (b,x) ->
-        if(x.USER?) 
-            mm(b, x.USER)
-        else
-            0
-    m_cmd = (b,x) ->
-        if(x.CMD?) 
-            mm(b, x.CMD)
-        else
-            0
-    rd_command  = (acc,b) ->
-        acc = acc * (m_cmd(b,x) + m_user(b,x))
-    v = _.reduce(cli_arguments, rd_command, 1)
-    return v
-
-# The following is very preliminary
- 
-# c2u = (x) -> punycode.ucs2.decode(x)
-
-# u2c = (x) -> punycode.ucs2.encode(x)
-
-# ch4 = [ '⣀', '⣤', '⣶', '⣿' ]
-
-# t10 = [   ' ' 
-#             '⣀'
-#             '⣀'
-#             '⣀⣤'
-#             '⣀⣤'
-#             '⣀⣤⣶'
-#             '⣀⣤⣶'
-#             '⣀⣤⣶'
-#             '⣀⣤⣶'
-#             '⣀⣤⣶⣿'
-#             '⣀⣤⣶⣿' ]
-
-# to10 = (x) -> t10[x]
-
-# toNum = (x) ->
-#     a = for c in _s.chars(_s.numberFormat(x,0,"",""))
-#             if c!= ',' then u2c([0x2080 + (c2u(c) - c2u('0'))]) else ','
-#     a.join("")
     
+    measure_prop = (b, y, prop) ->
+        if(y[prop]?) 
+            mm(b,y[prop])
+        else 
+            0
+            
+    rd_command  = (acc,b) ->
+        rpop = (ak, bk) -> ak + measure_prop(b, x, bk)
+        dist = _.reduce(props, rpop, 0)
+        acc = acc * dist
+        
+    v = _.reduce(cli_arguments, rd_command, 1)
+    console.log "#{x.toString()} == #{v}"
+    return v
     
 fs.readFile '/dev/stdin', 'utf8', (err, data) ->
     if (err>1)
