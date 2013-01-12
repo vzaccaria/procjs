@@ -1,5 +1,7 @@
 
-# Introduction 
+## Introduction 
+
+** Current version is 0.0.0 but it is pretty usable**.
 
 This package provides some command-line utilities for inspecting processes' status on a server:
 
