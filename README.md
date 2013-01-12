@@ -1,7 +1,7 @@
 
 # Introduction 
 
-This package provides some command-line utilities:
+This package provides some command-line utilities for inspecting processes' status on a server:
 
 * `jsps`: wrapper for the `ps` utility that produces a `json` array with processes' info. It is based on [Mike Grundy's `awkward` script](https://github.com/mgrundy/awkward).
 
