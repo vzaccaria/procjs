@@ -1,5 +1,6 @@
 {
   "name": "procjs",
+  "preferGlobal": "true",
   "description": "Extended `ps` commands (json output, fuzzy string matching) and REST server exporting current process list.",
   "version": "0.0.0",
   "contributors": [
@@ -18,7 +19,8 @@
     "moment": "",
     "underscore": "",
     "express": "",
-    "fs": ""
+    "fs": "",
+    "livescript": ""
   },
   "directories": {
     "bin": "./bin"
@@ -30,6 +32,7 @@
   "bin": {
     "jsps": "bin/jsps",
     "eps":  "bin/eps",
-    "proc": "bin/proc"
-  }
+    "proc": "bin/proc",
+  },
+  "license": "MIT"
 }

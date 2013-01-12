@@ -2,7 +2,7 @@
 
 require! 'util'
 require! 'child_process'.exec
-require! '../lib/node_modules/procjs/bin/settings'.settings
+require! './settings'.settings
 require! 'express'
 require! 'moment'
 
