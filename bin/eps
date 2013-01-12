@@ -35,7 +35,7 @@ meas = (x) ->
         acc = acc * dist
         
     v = _.reduce(cli_arguments, rd_command, 1)
-    console.log "#{x.toString()} == #{v}"
+    
     return v
     
 fs.readFile '/dev/stdin', 'utf8', (err, data) ->
