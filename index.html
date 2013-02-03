@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <title>Procjs by vzaccaria</title>
+  </head>
+
+  <body>
+    <div id="container">
+      <div class="inner">
+
+        <header>
+          <h1>Procjs</h1>
+          <h2></h2>
+        </header>
+
+        <section id="downloads" class="clearfix">
+          <a href="https://github.com/vzaccaria/procjs/zipball/master" id="download-zip" class="button"><span>Download .zip</span></a>
+          <a href="https://github.com/vzaccaria/procjs/tarball/master" id="download-tar-gz" class="button"><span>Download .tar.gz</span></a>
+          <a href="https://github.com/vzaccaria/procjs" id="view-on-github" class="button"><span>View on GitHub</span></a>
+        </section>
+
+        <hr>
+
+        <section id="main_content">
+          <h2>Why</h2>
+
+<p>Just got fed up with looking for a process in a long-ass output of regular <code>ps</code>. </p>
+
+<h2>How</h2>
+
+<p>This package provides some command-line utilities for inspecting processes' status on a server:</p>
+
+<ul>
+<li><p><code>jsps</code>: wrapper for the <code>ps</code> utility that produces a <code>json</code> array with processes' info. It is based on <a href="https://github.com/mgrundy/awkward">Mike Grundy's <code>awkward</code> script</a>.</p></li>
+<li>
+<p><code>proc</code>: REST server that polls periodically <code>jsps</code> and exports process information in <code>json</code> format. The following routes are supported:</p>
+
+<ul>
+<li>
+<code>/proc</code>                     get all <code>jsps</code> output</li>
+<li>
+<code>/proc/:key</code>                returns the value of <code>key</code> for all processes (in a list)</li>
+<li>
+<code>/proc/:key/:value</code>         returns a json object for the process that has <code>key</code>=<code>value</code>
+</li>
+<li>
+<code>/proc/:key/:value/:proj</code>   as above, but projects the result onto field <code>proj</code><br>
+</li>
+</ul>
+</li>
+<li><p><code>eps</code>: simple program that reorders the output of <code>jsps</code> by using fuzzy string matching on command name and user name (if available). To be used by piping the output of <code>jsps</code>.</p></li>
+</ul><h2>Installation</h2>
+
+<p>Install LiveScript globally:</p>
+
+<pre><code>&gt; npm install LiveScript -g
+</code></pre>
+
+<p>Then:</p>
+
+<pre><code>&gt; npm install procjs -g
+</code></pre>
+
+<h2>Usage</h2>
+
+<p><code>jsps</code> can be used with all the usual <code>ps</code> options (that depend, in turn, on your OS):</p>
+
+<pre><code>jsps -fec
+[{
+  "UID": 0,
+  "PID": 1,
+  "PPID": 0,
+  "C": 0,
+  "STIME": "10:08AM",
+  "TTY": "??",
+  "TIME": "0:30.02",
+  "CMD": "launchd"
+},
+{
+  "UID": 0,
+  "PID": 12,
+  "PPID": 1,
+  "C": 0,
+  "STIME": "10:08AM",
+  "TTY": "??",
+  "TIME": "0:03.53",
+  "CMD": "kextd"
+}
+...
+</code></pre>
+
+<p><code>eps</code> can be used to parse the output of <code>jsps</code> and may be given different <em>keywords</em> to be used for sorting the output. <code>eps</code> applies some similarity metrics (from module <code>stringsim</code>) to reorder and pretty print process information (in reverse order, so best matches are shown at the end of the list):</p>
+
+<pre><code>&gt; jsps -ec | eps 'core'
+ ...
+ 74657      ??         1:55.34    DashboardClient
+ 280        ??         0:00.02    AirPort Base Station Agent 
+ 71058      ??         0:00.56    cookied   
+ 268        ??         0:00.05    filecoordinationd
+ 15         ??         0:44.91    opendirectoryd
+ 261        ??         0:00.92    com.apple.dock.extra
+ 29         ??         1:01.50    coreservicesd
+ 73686      ??         3:06.89    Cornerstone
+ 200        ??         0:13.97    coreaudiod
+&gt; _
+</code></pre>
+
+<p>The similarity is computed by considering <code>CMD</code> and <code>USER</code> fields. I plan to introduce some simple customizable option to modify the fuzzy search.</p>
+
+<p><code>proc</code> can be started without options. It reads <code>settings.js</code> to setup some variables (like <code>jsps</code> options, refresh period and port to listen to). Here are some examples:</p>
+
+<p>Getting the complete process list on the server:</p>
+
+<pre><code>&gt; curl localhost:6969/proc 
+[{
+  "UID": 0,
+  "PID": 1,
+  "PPID": 0,
+  "C": 0,
+  "STIME": "10:08AM",
+  "TTY": "??",
+  "TIME": "0:30.02",
+  "CMD": "launchd"
+},
+{
+  "UID": 0,
+  "PID": 12,
+  "PPID": 1,
+  "C": 0,
+  "STIME": "10:08AM",
+  "TTY": "??",
+  "TIME": "0:03.53",
+  "CMD": "kextd"
+}
+...
+</code></pre>
+
+<p>Getting the information about a single process:</p>
+
+<pre><code>&gt; curl localhost:6969/proc/pid/12
+</code></pre>
+
+<p>or</p>
+
+<pre><code>&gt; curl localhost:6969/proc/cmd/kextd
+</code></pre>
+
+<p>both return a list with the same process description:</p>
+
+<pre><code>[ {
+  "UID": 0,
+  "PID": 12,
+  "PPID": 1,
+  "C": 0,
+  "STIME": "10:08AM",
+  "TTY": "??",
+  "TIME": "0:03.53",
+  "CMD": "kextd"
+} ]
+</code></pre>
+
+<p>the process description can be projected to one of the available properties, e.g. (only the property of the first match is returned):</p>
+
+<pre><code>&gt; curl localhost:6969/proc/pid/12/CMD
+kextd
+</code></pre>
+
+<p>Finally, there is an additional attribute that can be queried, called <code>status</code>:</p>
+
+<pre><code>&gt; curl localhost:6969/proc/pid/12/status
+UP
+</code></pre>
+
+<p>This attribute can be used for determining if the process is UP or DOWN. It can be used to connect <a href="https://github.com/obazoud/statusdashboard">Status Dashboard</a> to probe and display the status of processes on a remote server.</p>
+
+<h2>Todo</h2>
+
+<ul>
+<li>Write tests</li>
+<li>Profit</li>
+<li>Extend Custom settings file.</li>
+<li>Enhanced <code>eps</code> output (use graphics symbols).</li>
+<li>Would it be nice to start processes with POST and kill process with DELETE</li>
+</ul>
+        </section>
+
+        <footer>
+          Procjs is maintained by <a href="https://github.com/vzaccaria">vzaccaria</a><br>
+          This page was generated by <a href="http://pages.github.com">GitHub Pages</a>. Tactile theme by <a href="http://twitter.com/jasonlong">Jason Long</a>.
+        </footer>
+
+        
+      </div>
+    </div>
+  </body>
+</html>
